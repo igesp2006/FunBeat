@@ -13,7 +13,7 @@ class DeviceFrame(ctk.CTkFrame):
             fg_color="#1B1825"
         )
         
-        self.dashbaord = dashboard
+        self.dashboard = dashboard
         self.accent_rgb = (185, 131, 255)
         self.bg_rgb = (27, 24, 37)
         self.menu()
@@ -101,7 +101,7 @@ class DeviceFrame(ctk.CTkFrame):
     
 
     def view_config_page(self):
-        self.dashbaord.show_page(self.dashbaord.config_dev_frame)  
+        self.dashboard.show_page(self.dashboard.config_dev_frame)  
     
     
     def create_label(self):   
@@ -127,7 +127,7 @@ class DeviceFrame(ctk.CTkFrame):
                                 text=i['text'],
                                 font=('Cascadia Mono',15),
                                 text_color="#B983FF",
-                                bg_color=f'#000000',
+                                bg_color=f'#1B1825',
                                 fg_color="#1B1825",
                                 )
         
