@@ -1,0 +1,35 @@
+{
+    "folders": [
+        {
+            "name": "app",
+            "path": "app"
+        },
+        {
+            "name": "assets",
+            "path": "assets"
+        },
+        {
+            "name": "audio-visualizer",
+            "path": "firmware/audio-visualizer"
+        },
+        {
+            "name": "media-deck",
+            "path": "firmware/media-deck"
+        },
+        {
+            "name": "media playback controller",
+            "path": "firmware/media playback controller"
+        },
+        {
+            "name": "scratch",
+            "path": "scratch"
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/.pio": true
+        },
+        "editor.cursorBlinking": "phase",
+        "editor.cursorSmoothCaretAnimation": "on"
+    }
+}

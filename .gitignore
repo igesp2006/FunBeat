@@ -1,0 +1,14 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# PlatformIO
+**/.pio/
+
+# VS Code
+**/.vscode/*
+!**/.vscode/extensions.json
+
+# Scratch / experiments
+scratch/
