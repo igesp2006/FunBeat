@@ -94,7 +94,7 @@ class ConfigureDevices(ctk.CTkFrame):
             border_width=0,
             text_color="#1B1825",
             hover=False,
-            command=lambda:self.update_device_name()
+            command=lambda:self.update_button(reset=True)
         )
     
     def animate(self):
@@ -182,7 +182,7 @@ class ConfigureDevices(ctk.CTkFrame):
             return val
         
         
-    def update_button(self):
+    def update_button(self,reset=False):
 
         self.clear_labels()
         device_name = self.device_menu.get()
@@ -199,12 +199,18 @@ class ConfigureDevices(ctk.CTkFrame):
                 return
 
             if device["name"] == device_name:
-                device["com_port"] = com_port
-                device["baud_rate"] = baud_rate
-                break
+                if reset:
+                    device["com_port"] = "None"
+                    device["baud_rate"] = "9600"
+                    break
+                else:
+                    device["com_port"] = com_port
+                    device["baud_rate"] = baud_rate
+                    break
 
             
         save_config(data, get_project_root('main')/'config'/'deviceconfig.json')
-        self.log_label[0].configure(text=f"Configuration for '{device_name}' updated successfully.")
+        self.log_label[0].configure(text=f"Configuration for '{device_name}' {'updated' if not reset else 'reset'} successfully.")
         self.after(3000, lambda: self.log_label[0].configure(text=''))
-        
+
+    
