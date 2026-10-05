@@ -1,8 +1,8 @@
 from gui.gui_functions import fade_in
 import customtkinter as ctk
-from devices.serial_manager import com_port,show_device_description
+from devices.serial_manager import com_port
 from utility.path import get_project_root
-from utility.json import get_data
+from utility.json import load_config, save_config
 import json
 
 
@@ -107,50 +107,41 @@ class ConfigureDevices(ctk.CTkFrame):
         self.after(10,lambda:fade_in(self,
                                      self.device_menu,
                                      0,30,
-                                     320,80,
+                                     320,60,
                                      self.bg_rgb,(42, 36, 56),))
         
 
         self.after(150,lambda:fade_in(self,
                                      self.com_port_menu,
                                      0,30,
-                                     320,160,
+                                     320,140,
                                      self.bg_rgb,(42, 36, 56),))
         
         
         self.after(190,lambda:fade_in(self,
                                      self.baud_rate_menu,
                                      0,30,
-                                     320,240,
+                                     320,220,
                                      self.bg_rgb,(42, 36, 56),))
         
         
         self.after(230,lambda:fade_in(self,
                                      self.apply_button,
                                      0,30,
-                                     320,330,
+                                     320,310,
                                      self.bg_rgb,(185, 131, 255),))
         
         self.after(280,lambda:fade_in(self,
                                      self.reset_button,
                                      0,30,
-                                     320,410,
+                                     320,390,
                                      self.bg_rgb,(185, 131, 255),))
         
         
     def create_label(self):   
             
-            self.log_label_config = [
-                                    {'text': '', 'x': 35, 'y': 285},
-                                    {'text': '', 'x': 35, 'y': 310},
-                                    {'text': '', 'x': 35, 'y': 335},
-                                    {'text': '', 'x': 35, 'y': 360},
-                                    {'text': '', 'x': 35, 'y': 385},
-                                    {'text': '', 'x': 35, 'y': 410},
-                                    {'text': '', 'x': 35, 'y': 435}
-                                    ]
+            self.log_label_config = [{'text': '', 'x': 325, 'y': 445}]
             
-    
             self.log_label = []
             
             for i in self.log_label_config:
@@ -158,7 +149,7 @@ class ConfigureDevices(ctk.CTkFrame):
                 label = ctk.CTkLabel(self,
                                     text=i['text'],
                                     font=('Cascadia Mono',15),
-                                    text_color="#B983FF",
+                                    text_color="#FF6B9D",
                                     
                                     fg_color="#1B1825",
                                     )
@@ -168,6 +159,7 @@ class ConfigureDevices(ctk.CTkFrame):
             else:
                 i:ctk.CTkLabel
                 for i,j in zip(self.log_label,self.log_label_config):
+                    i.place(anchor='center')
                     i.place(x=j['x'],y=j['y'])
             
         
@@ -183,7 +175,7 @@ class ConfigureDevices(ctk.CTkFrame):
         DIR = get_project_root('main')
         file_path = DIR/'config'/'deviceconfig.json'
         val = []
-        data = get_data(file_path)
+        data = load_config(file_path)
         for i in data["devices"]:
             val.append(i["name"])
         else:
@@ -191,4 +183,28 @@ class ConfigureDevices(ctk.CTkFrame):
         
         
     def update_button(self):
-        pass
+
+        self.clear_labels()
+        device_name = self.device_menu.get()
+        com_port = self.com_port_menu.get()
+        baud_rate = self.baud_rate_menu.get()
+
+        data = load_config(get_project_root('main')/'config'/'deviceconfig.json')
+
+        for device in data["devices"]:
+            print(device["name"])
+
+            if com_port == 'None':
+                self.log_label[0].configure(text=f"'{device_name}' is not connected.")
+                return
+
+            if device["name"] == device_name:
+                device["com_port"] = com_port
+                device["baud_rate"] = baud_rate
+                break
+
+            
+        save_config(data, get_project_root('main')/'config'/'deviceconfig.json')
+        self.log_label[0].configure(text=f"Configuration for '{device_name}' updated successfully.")
+        self.after(3000, lambda: self.log_label[0].configure(text=''))
+        
