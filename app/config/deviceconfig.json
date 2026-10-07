@@ -2,20 +2,21 @@
     "devices": [
         {
             "name": "Playback Controller",
-            "com_port": "",
-            "baud_rate": 0
-        }
-        ,
+            "com_port": "None",
+            "baud_rate": "9600",
+            "status":0
+        },
         {
             "name": "Media Deck",
-            "com_port": "",
-            "baud_rate": 0
-        }
-        ,
+            "com_port": "None",
+            "baud_rate": "9600",
+            "status":0
+        },
         {
             "name": "Audio Visualizer",
-            "com_port": "",
-            "baud_rate": 0
+            "com_port": "None",
+            "baud_rate": "9600",
+            "status":0
         }
     ]
 }
