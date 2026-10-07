@@ -2,7 +2,8 @@
 
 
 import serial.tools.list_ports
-import serial as ser
+import serial
+import time
 
 
 def show_device_description():
@@ -50,3 +51,34 @@ def connect(com_port,baud_rate,timeout=1) -> (serial.Serial | tuple[None, Except
         
     except Exception as e:
         return None,e
+
+
+##########
+##########
+##########
+##########
+##########
+
+
+def disconnect(ser_obj:serial.Serial):
+
+    '''disconnects the device'''
+    
+    # dtr rts pulse to trigger reset and clean exit
+
+    ser_obj.dtr = False           
+    ser_obj.rts = True
+
+    time.sleep(0.1)
+
+    ser_obj.dtr = True
+    ser_obj.rts = False
+
+    time.sleep(0.1)
+
+    # disconnect
+
+    ser_obj.close()
+
+
+
