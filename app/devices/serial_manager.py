@@ -65,19 +65,9 @@ def disconnect(ser_obj:serial.Serial):
     '''disconnects the device'''
     
     # dtr rts pulse to trigger reset and clean exit
-
-    ser_obj.dtr = False           
-    ser_obj.rts = True
-
-    time.sleep(0.1)
-
-    ser_obj.dtr = True
-    ser_obj.rts = False
-
-    time.sleep(0.1)
+    reset(ser_obj)
 
     # disconnect
-
     ser_obj.close()
 
 
@@ -101,9 +91,6 @@ def reset(ser_obj:serial.Serial):
     
     ser_obj.dtr = True
     ser_obj.rts = False
-    
+
     time.sleep(0.1)
-    
-
-
 
