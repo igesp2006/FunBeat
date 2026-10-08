@@ -38,11 +38,21 @@ class PlaybackFrame(ctk.CTkFrame):
                                       self.bg_rgb,
                                       self.accent_rgb))
         
+        self.after(100,lambda:fade_in(self,
+                                      self.reset_button,
+                                      0,30,
+                                      235,
+                                      290,
+                                      self.bg_rgb,
+                                      self.accent_rgb))
+        
         
         
         
     def menu(self):
-            
+
+        '''widgets'''
+
         self.connect_button = ctk.CTkButton(self,
                                                 text='Connect',font=('Fixedsys',35),
                                                 text_color='#1B1825',
@@ -55,6 +65,7 @@ class PlaybackFrame(ctk.CTkFrame):
                                                 bg_color=f'#{self.bg_rgb[0]:02x}{self.bg_rgb[1]:02x}{self.bg_rgb[2]:02x}',
                                                 fg_color="#1B1825",
                                                 command=None)
+
         
         self.disconnect_button = ctk.CTkButton(self,
                                                 text='Disconnect',
@@ -69,5 +80,20 @@ class PlaybackFrame(ctk.CTkFrame):
                                                 bg_color=f'#{self.bg_rgb[0]:02x}{self.bg_rgb[1]:02x}{self.bg_rgb[2]:02x}',
                                                 fg_color="#1B1825",
                                                 command=None)
+        
+    
+        self.reset_button = ctk.CTkButton(self,
+                                        text='Reset',
+                                        font=('Fixedsys',35),
+                                        text_color='#1B1825',
+                                        corner_radius=30,
+                                        width=180,
+                                        height=70,
+                                        hover=True,
+                                        border_color='#6E11B9',
+                                        border_width=5,
+                                        bg_color=f'#{self.bg_rgb[0]:02x}{self.bg_rgb[1]:02x}{self.bg_rgb[2]:02x}',
+                                        fg_color="#1B1825",
+                                        command=None)
         
     
