@@ -23,29 +23,28 @@ class PlaybackFrame(ctk.CTkFrame):
         
         fade_in(
             self,
-            self.device_info_button,
+            self.connect_button,
             0,30,
-            220,
+            219,
             90,
             self.bg_rgb,
             self.accent_rgb)
         
         self.after(100,lambda:fade_in(self,
-                                      self.sound_device_info_button,
+                                      self.disconnect_button,
                                       0,30,
-                                      215,
+                                      190,
                                       190,
                                       self.bg_rgb,
                                       self.accent_rgb))
         
         
-
         
         
     def menu(self):
             
-        self.device_info_button = ctk.CTkButton(self,
-                                                text='Connect',font=('Berlin Sans FB',35),
+        self.connect_button = ctk.CTkButton(self,
+                                                text='Connect',font=('Fixedsys',35),
                                                 text_color='#1B1825',
                                                 corner_radius=30,
                                                 width=200,
@@ -57,9 +56,9 @@ class PlaybackFrame(ctk.CTkFrame):
                                                 fg_color="#1B1825",
                                                 command=None)
         
-        self.sound_device_info_button = ctk.CTkButton(self,
+        self.disconnect_button = ctk.CTkButton(self,
                                                 text='Disconnect',
-                                                font=('Berlin Sans FB',35),
+                                                font=('Fixedsys',35),
                                                 text_color='#1B1825',
                                                 corner_radius=30,
                                                 width=180,
