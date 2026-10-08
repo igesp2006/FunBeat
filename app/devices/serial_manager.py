@@ -81,4 +81,29 @@ def disconnect(ser_obj:serial.Serial):
     ser_obj.close()
 
 
+##########
+##########
+##########
+##########
+##########
+
+
+def reset(ser_obj:serial.Serial):
+
+    '''reset the device; do not close serial port'''
+
+    # dtr rts pulse to trigger reset 
+
+    ser_obj.dtr = False           
+    ser_obj.rts = True
+    
+    time.sleep(0.1)
+    
+    ser_obj.dtr = True
+    ser_obj.rts = False
+    
+    time.sleep(0.1)
+    
+
+
 
