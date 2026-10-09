@@ -187,7 +187,7 @@ class ConfigureDevices(ctk.CTkFrame):
         self.clear_labels()
         device_name = self.device_menu.get()
         com_port = self.com_port_menu.get()
-        baud_rate = self.baud_rate_menu.get()
+        baud_rate = int(self.baud_rate_menu.get())
 
         data = load_config(get_project_root('main')/'config'/'deviceconfig.json')
 
@@ -201,7 +201,7 @@ class ConfigureDevices(ctk.CTkFrame):
             if device["name"] == device_name:
                 if reset:
                     device["com_port"] = "None"
-                    device["baud_rate"] = "9600"
+                    device["baud_rate"] = 9600
                     break
                 else:
                     device["com_port"] = com_port
