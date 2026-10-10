@@ -50,8 +50,7 @@ def connect(com_port,baud_rate,timeout=1) :
         return True, serial.Serial(com_port, baud_rate, timeout=timeout)
         
     except Exception as e:
-        print('here')
-        
+        return None,e
 
 
 ##########
