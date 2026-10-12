@@ -7,6 +7,7 @@ from utility.json import load_config, save_config
 from utility.path import get_project_root
 import threading
 import ctypes
+import customtkinter as ctk    # only for annotation
 
 
 VK_MEDIA_PLAY_PAUSE = 0xB3
@@ -49,11 +50,9 @@ class PlaybackController():
             if self.pc_serial is not None and self.pc_serial.is_open:
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
-                    if line in {"1", "2", "3", "4", "5"}:
+                    if line in {"1", "2", "4", "5"}:
                         print(line,'q')
                         self.data_queue.put(line)
-                        self.data_queue.get_nowait()
-                       
                 except serial.SerialException:
                     self.pc_serial = None
                     print('break1')
@@ -81,6 +80,22 @@ class PlaybackController():
                 self.press_media_key(VK_MEDIA_NEXT_TRACK)
 
 
+
+    def main_loop(self,master:ctk.CTkFrame):
+        print('ml')
+        while not self.data_queue.empty():
+            print('dq block')
+            try:
+                data = self.data_queue.get_nowait()
+                self.handle_button_press(data)
+            except queue.Empty:
+                print('inside que break')
+                break
+        if not self.event.is_set():
+            master.after(100,lambda:self.main_loop(master))
+        else:
+            print('closed recurr')
+            return
 
     
     def start(self):
