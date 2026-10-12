@@ -1,6 +1,6 @@
 '''File for playback controller logic'''
 
-
+import queue
 import serial
 from devices.serial_manager import connect, disconnect, reset
 from utility.json import load_config, save_config
@@ -23,6 +23,7 @@ class PlaybackController():
         self.pc_serial = None
         self.data =  self.get_data()
         self.event = threading.Event()
+        self.data_queue = queue.Queue()
 
 
     def connect_mcu(self):
@@ -47,8 +48,10 @@ class PlaybackController():
             if self.pc_serial is not None and self.pc_serial.is_open:
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
+                    
                     if line in {"1", "2", "3", "4", "5"}:
-                        print(line)
+                        self.data_queue.put(line)     
+
                 except serial.SerialException:
                     self.pc_serial = None
                     break
