@@ -6,6 +6,13 @@ from devices.serial_manager import connect, disconnect, reset
 from utility.json import load_config, save_config
 from utility.path import get_project_root
 import threading
+import ctypes
+
+
+VK_MEDIA_PLAY_PAUSE = 0xB3
+VK_MEDIA_NEXT_TRACK = 0xB0
+VK_MEDIA_PREV_TRACK = 0xB1
+VK_VOLUME_MUTE = 0xAD
 
 
 
@@ -35,7 +42,7 @@ class PlaybackController():
     
 
     def loop(self):
-
+        print('inside loop')
         while not self.event.is_set():
             if self.pc_serial is not None and self.pc_serial.is_open:
                 try:
@@ -47,6 +54,11 @@ class PlaybackController():
                     break
             else:
                 break
+             
+
+
+
+
 
     
     def start(self):
@@ -72,4 +84,9 @@ class PlaybackController():
 
             if device["name"] == "Playback Controller":
                 return [device['com_port'],device['baud_rate']]
-      
+
+
+    @staticmethod
+    def press_media_key(key_code):
+        ctypes.windll.user32.keybd_event(key_code, 0, 0, 0)
+        ctypes.windll.user32.keybd_event(key_code, 0, 2, 0)
