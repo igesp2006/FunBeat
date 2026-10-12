@@ -20,6 +20,7 @@ class PlaybackController():
 
     def __init__(self):
 
+        self.master = None
         self.pc_serial = None
         self.data =  self.get_data()
         self.event = threading.Event()
@@ -48,18 +49,36 @@ class PlaybackController():
             if self.pc_serial is not None and self.pc_serial.is_open:
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
-                    
                     if line in {"1", "2", "3", "4", "5"}:
-                        self.data_queue.put(line)     
-
+                        print(line,'q')
+                        self.data_queue.put(line)
+                        self.data_queue.get_nowait()
+                       
                 except serial.SerialException:
                     self.pc_serial = None
+                    print('break1')
                     break
             else:
+                print('break2')
                 break
-             
+        print('outside while')        
 
 
+
+    def handle_button_press(self,button):
+        print('inside button fn')
+        match button:
+            case '1':
+                self.press_media_key(VK_MEDIA_PLAY_PAUSE)
+
+            case '2':
+                self.press_media_key(VK_VOLUME_MUTE)
+
+            case '4':
+                self.press_media_key(VK_MEDIA_PREV_TRACK)
+
+            case '5':
+                self.press_media_key(VK_MEDIA_NEXT_TRACK)
 
 
 
