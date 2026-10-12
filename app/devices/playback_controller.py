@@ -45,7 +45,7 @@ class PlaybackController():
     
 
     def loop(self):
-        print('inside loop')
+
         while not self.event.is_set():
             if self.pc_serial is not None and self.pc_serial.is_open:
                 try:
@@ -55,17 +55,15 @@ class PlaybackController():
                         self.data_queue.put(line)
                 except serial.SerialException:
                     self.pc_serial = None
-                    print('break1')
                     break
             else:
-                print('break2')
                 break
-        print('outside while')        
+   
 
 
 
     def handle_button_press(self,button):
-        print('inside button fn')
+
         match button:
             case '1':
                 self.press_media_key(VK_MEDIA_PLAY_PAUSE)
@@ -82,19 +80,17 @@ class PlaybackController():
 
 
     def main_loop(self,master:ctk.CTkFrame):
-        print('ml')
+
         while not self.data_queue.empty():
-            print('dq block')
+
             try:
                 data = self.data_queue.get_nowait()
                 self.handle_button_press(data)
             except queue.Empty:
-                print('inside que break')
                 break
         if not self.event.is_set():
             master.after(100,lambda:self.main_loop(master))
         else:
-            print('closed recurr')
             return
 
     
