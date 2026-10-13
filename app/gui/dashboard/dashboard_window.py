@@ -8,8 +8,9 @@ from gui.dashboard.pages.rgb_ic_page import RgbIcFrame
 from gui.dashboard.pages.server_page import ServerFrame
 from gui.dashboard.pages.playback_page import PlaybackFrame
 from gui.dashboard.pages.configure_device_page import ConfigureDevices
+from utility.path import get_asset_path
 
- 
+
 class DashboardWindowGui():
     
     def __init__(self,parent=None):
@@ -22,10 +23,18 @@ class DashboardWindowGui():
             self.dashtop.protocol('WM_DELETE_WINDOW',self.on_close)
             self.parent = parent
             
-        self.dashtop.geometry(center_window(self.dashtop,700,720))
-        self.dashtop.resizable(1,1)
+        self.dashtop.geometry(center_window(self.dashtop, 700, 720))
+        self.dashtop.resizable(1, 1)
         self.dashtop.title('FunBeat: Dashboard')
         self.dashtop.configure(fg_color="#1B1825")
+
+        icon_path = str(get_asset_path('ico'))
+
+        if parent is None:
+            self.dashtop.iconbitmap(icon_path)
+        else:
+            self.dashtop.after(300, lambda: self.dashtop.iconbitmap(icon_path))
+
         self.create_widget()
         self.create_home_frame()
         self.create_buttons()
@@ -46,7 +55,6 @@ class DashboardWindowGui():
                           self.server_frame,
                           self.playback_frame,
                           self.config_dev_frame]
-        
         
         
 

@@ -2,6 +2,8 @@ from gui.gui_functions import *
 from gui.settings_window import SettingsWindowGui
 from gui.dashboard.dashboard_window import DashboardWindowGui
 import customtkinter as ctk
+from utility.path import get_asset_path
+
 
 
 class MainWindowGui():
@@ -13,6 +15,7 @@ class MainWindowGui():
         self.root.resizable(0,0)
         self.root.title(f'FunBeat')
         self.root.configure(fg_color="#1B1825")
+        self.root.iconbitmap(str(get_asset_path('ico')))
         self.gui_header()
         
 
@@ -107,20 +110,8 @@ class MainWindowGui():
     def open_dashboard(self):
         
         self.root.withdraw()
-        dash = DashboardWindowGui(self.root)
-        dash.update()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        DashboardWindowGui(self.root)
+        
     
     
     def update(self):
