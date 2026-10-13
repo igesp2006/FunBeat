@@ -17,4 +17,13 @@ def get_project_root(marker:str) -> Path:
     # return current working directory if marker isn't found
     return Path.cwd()
 
+
+def get_asset_path(asset):
+
+    PROJECT_ROOT = get_project_root("assets")
     
+    match asset:
+        case 'ico':
+            return  PROJECT_ROOT / "assets" / "funbeat.ico"
+        case 'png':
+            return  PROJECT_ROOT / "assets" / "funbeat.png"
