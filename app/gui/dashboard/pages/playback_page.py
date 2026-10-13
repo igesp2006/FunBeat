@@ -1,5 +1,6 @@
 from gui.gui_functions import fade_in
 import customtkinter as ctk
+from devices.playback_controller import PlaybackController
 
 class PlaybackFrame(ctk.CTkFrame):
 
@@ -16,6 +17,7 @@ class PlaybackFrame(ctk.CTkFrame):
         self.place(x=30, y=140)
         self.place_forget()
         self.menu()
+        self.pbc = PlaybackController()
         
         
         
@@ -64,7 +66,7 @@ class PlaybackFrame(ctk.CTkFrame):
                                                 border_width=5,
                                                 bg_color=f'#{self.bg_rgb[0]:02x}{self.bg_rgb[1]:02x}{self.bg_rgb[2]:02x}',
                                                 fg_color="#1B1825",
-                                                command=None)
+                                                command=self.connect)
 
         
         self.disconnect_button = ctk.CTkButton(self,
@@ -79,7 +81,7 @@ class PlaybackFrame(ctk.CTkFrame):
                                                 border_width=5,
                                                 bg_color=f'#{self.bg_rgb[0]:02x}{self.bg_rgb[1]:02x}{self.bg_rgb[2]:02x}',
                                                 fg_color="#1B1825",
-                                                command=None)
+                                                command=self.disconnect)
         
     
         self.reset_button = ctk.CTkButton(self,
@@ -94,6 +96,24 @@ class PlaybackFrame(ctk.CTkFrame):
                                         border_width=5,
                                         bg_color=f'#{self.bg_rgb[0]:02x}{self.bg_rgb[1]:02x}{self.bg_rgb[2]:02x}',
                                         fg_color="#1B1825",
-                                        command=None)
+                                        command=self.reset_mcu)
         
+
+
+    def connect(self):
+
+        self.pbc.connect_mcu()
+        self.pbc.start()
+        self.pbc.main_loop(self)
+
+
+    def disconnect(self):
+
+        self.pbc.stop()
+
+
+    
+    def reset_mcu(self):
+        self.pbc.reset_mcu()
+
     
