@@ -105,7 +105,10 @@ class PlaybackController():
         self.event.set()
         self.start_thread.join()
         self.disconnect_mcu()
-        
+
+    
+    def reset_mcu(self):
+        reset(self.pc_serial)
 
 
     @staticmethod
