@@ -53,14 +53,12 @@ class PlaybackController():
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
                     if line in {"1", "2", "4", "5"}:
-                        print(line,'q')
                         self.data_queue.put(line)
                 except serial.SerialException:
                     self.pc_serial = None
-                    print('triggerd break 1')
+                    self.event.set()
                     break
             else:
-                print('triggerd break 1')
                 break
    
 
@@ -84,7 +82,6 @@ class PlaybackController():
 
 
     def main_loop(self,master:ctk.CTkFrame):
-        print('here')
 
         while not self.data_queue.empty():
 
@@ -114,7 +111,10 @@ class PlaybackController():
 
     
     def reset_mcu(self):
-        reset(self.pc_serial)
+
+        if self.pc_serial is not None and self.pc_serial.is_open: 
+            reset(self.pc_serial)
+
 
 
     @staticmethod
