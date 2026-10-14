@@ -47,7 +47,9 @@ class PlaybackController():
     def loop(self):
 
         while not self.event.is_set():
+            print(1)
             if self.pc_serial is not None and self.pc_serial.is_open:
+                print(2)
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
                     if line in {"1", "2", "4", "5"}:
@@ -55,8 +57,10 @@ class PlaybackController():
                         self.data_queue.put(line)
                 except serial.SerialException:
                     self.pc_serial = None
+                    print('triggerd break 1')
                     break
             else:
+                print('triggerd break 1')
                 break
    
 
@@ -80,6 +84,7 @@ class PlaybackController():
 
 
     def main_loop(self,master:ctk.CTkFrame):
+        print('here')
 
         while not self.data_queue.empty():
 
@@ -96,13 +101,14 @@ class PlaybackController():
     
     def start(self):
 
+        self.event.clear()
         self.start_thread = threading.Thread(target=self.loop,daemon=True)
         self.start_thread.start()
        
 
     def stop(self):
 
-        self.event.set()
+        self.event.set() 
         self.start_thread.join()
         self.disconnect_mcu()
 
