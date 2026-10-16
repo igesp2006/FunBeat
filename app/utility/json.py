@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from utility.path import get_project_root
 
 
 def load_config(config_path: Path):
@@ -16,3 +17,15 @@ def save_config(config, config_path: Path):
 
     with open(config_path, "w") as f:
         json.dump(config, f, indent=4)
+
+
+def update_device_config(name,key,value):
+    
+    data = load_config(get_project_root('main')/'config'/'deviceconfig.json')
+
+    for device in data["devices"]:
+
+        if device["name"] == name:
+            device[key] = value
+
+    save_config(data, get_project_root('main')/'config'/'deviceconfig.json')
