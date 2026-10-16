@@ -1,5 +1,6 @@
 '''File for playback controller logic'''
 
+from pydoc import text
 import queue
 import serial
 from devices.serial_manager import connect, disconnect, reset
@@ -19,13 +20,18 @@ VK_VOLUME_MUTE = 0xAD
 
 class PlaybackController():
 
-    def __init__(self,master):
-
+    def __init__(self,master:ctk.CTkFrame,on_status_change=None):
+        self.on_status_change = on_status_change
         self.master = master
         self.pc_serial = None
         self.data =  self.get_data()
         self.event = threading.Event()
         self.data_queue = queue.Queue()
+
+
+    def _notify(self):
+        if self.on_status_change:
+            self.on_status_change()
 
 
     def connect_mcu(self):
@@ -47,9 +53,7 @@ class PlaybackController():
     def loop(self):
 
         while not self.event.is_set():
-            print(1)
             if self.pc_serial is not None and self.pc_serial.is_open:
-                print(2)
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
                     if line in {"1", "2", "4", "5"}:
@@ -104,7 +108,7 @@ class PlaybackController():
             self.start_thread = threading.Thread(target=self.loop,daemon=True)
             self.start_thread.start()
             update_device_config("Playback Controller", "status", 1)
-        
+            self._notify()
         
 
     def stop(self):
@@ -114,12 +118,14 @@ class PlaybackController():
             self.start_thread.join()
         self.disconnect_mcu()
         update_device_config("Playback Controller", "status", 0)
+        self._notify()
 
     
     def reset_mcu(self):
 
         if self.pc_serial is not None and self.pc_serial.is_open: 
             reset(self.pc_serial)
+            
 
 
 
