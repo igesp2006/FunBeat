@@ -3,7 +3,7 @@
 import queue
 import serial
 from devices.serial_manager import connect, disconnect, reset
-from utility.json import load_config, save_config
+from utility.json import load_config, update_device_config
 from utility.path import get_project_root
 import threading
 import ctypes
@@ -19,9 +19,9 @@ VK_VOLUME_MUTE = 0xAD
 
 class PlaybackController():
 
-    def __init__(self):
+    def __init__(self,master):
 
-        self.master = None
+        self.master = master
         self.pc_serial = None
         self.data =  self.get_data()
         self.event = threading.Event()
@@ -57,6 +57,7 @@ class PlaybackController():
                 except serial.SerialException:
                     self.pc_serial = None
                     self.event.set()
+                    self.stop()
                     break
             else:
                 break
@@ -81,7 +82,7 @@ class PlaybackController():
 
 
 
-    def main_loop(self,master:ctk.CTkFrame):
+    def main_loop(self):
 
         while not self.data_queue.empty():
 
@@ -91,7 +92,7 @@ class PlaybackController():
             except queue.Empty:
                 break
         if not self.event.is_set():
-            master.after(100,lambda:self.main_loop(master))
+            self.master.after(100,lambda:self.main_loop())
         else:
             return
 
@@ -99,15 +100,20 @@ class PlaybackController():
     def start(self):
 
         self.event.clear()
-        self.start_thread = threading.Thread(target=self.loop,daemon=True)
-        self.start_thread.start()
-       
+        if self.pc_serial is not None and self.pc_serial.is_open:
+            self.start_thread = threading.Thread(target=self.loop,daemon=True)
+            self.start_thread.start()
+            update_device_config("Playback Controller", "status", 1)
+        
+        
 
     def stop(self):
 
         self.event.set() 
-        self.start_thread.join()
+        if self.pc_serial is not None and self.pc_serial.is_open:
+            self.start_thread.join()
         self.disconnect_mcu()
+        update_device_config("Playback Controller", "status", 0)
 
     
     def reset_mcu(self):
