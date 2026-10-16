@@ -4,6 +4,7 @@
 import serial.tools.list_ports
 import serial
 import time
+import threading
 
 
 def show_device_description():
@@ -86,11 +87,7 @@ def reset(ser_obj:serial.Serial):
 
     ser_obj.dtr = False           
     ser_obj.rts = True
-    
-    time.sleep(0.1)
-    
+      
     ser_obj.dtr = True
     ser_obj.rts = False
-
-    time.sleep(0.1)
 
