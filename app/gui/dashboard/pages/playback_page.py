@@ -1,6 +1,7 @@
 from gui.gui_functions import fade_in
 import customtkinter as ctk
 from devices.playback_controller import PlaybackController
+from utility.json import load_config, get_project_root
 
 class PlaybackFrame(ctk.CTkFrame):
 
@@ -17,11 +18,14 @@ class PlaybackFrame(ctk.CTkFrame):
         self.place(x=30, y=140)
         self.place_forget()
         self.menu()
-        self.pbc = PlaybackController()
+        self.update_status_label()
+        self.pbc = PlaybackController(self,on_status_change=self.update_status_label)
         
         
         
     def animate(self):  
+ 
+        self.status_label.place(x=220,y=400,anchor='nw')
         
         fade_in(
             self,
@@ -97,14 +101,22 @@ class PlaybackFrame(ctk.CTkFrame):
                                         bg_color=f'#{self.bg_rgb[0]:02x}{self.bg_rgb[1]:02x}{self.bg_rgb[2]:02x}',
                                         fg_color="#1B1825",
                                         command=self.reset_mcu)
-        
+
+
+        self.status_label = ctk.CTkLabel(self,
+                                        text='',
+                                        font=('Cascadia Mono',15),
+                                        text_color="#B983FF",
+                                        width=40,
+                                        bg_color=f'#1B1825',
+                                        fg_color="#1B1825")
 
 
     def connect(self):
 
         self.pbc.connect_mcu()
         self.pbc.start()
-        self.pbc.main_loop(self)
+        self.pbc.main_loop()
 
 
     def disconnect(self):
@@ -116,4 +128,14 @@ class PlaybackFrame(ctk.CTkFrame):
     def reset_mcu(self):
         self.pbc.reset_mcu()
 
-    
+
+
+    def update_status_label(self):
+
+        data = load_config(get_project_root('main')/'config'/'deviceconfig.json')
+        value = data["devices"][0]["status"]
+
+        if value:
+            self.status_label.configure(text='Device is Connected')
+        else:
+            self.status_label.configure(text='Device is Disconnected')
