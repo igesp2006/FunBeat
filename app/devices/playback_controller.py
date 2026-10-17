@@ -1,6 +1,5 @@
 '''File for playback controller logic'''
 
-from pydoc import text
 import queue
 import serial
 from devices.serial_manager import connect, disconnect, reset
@@ -8,7 +7,6 @@ from utility.json import load_config, update_device_config
 from utility.path import get_project_root
 import threading
 import ctypes
-import customtkinter as ctk    # only for annotation
 
 
 VK_MEDIA_PLAY_PAUSE = 0xB3
@@ -20,9 +18,8 @@ VK_VOLUME_MUTE = 0xAD
 
 class PlaybackController():
 
-    def __init__(self,master:ctk.CTkFrame,on_status_change=None):
+    def __init__(self,on_status_change=None):
         self.on_status_change = on_status_change
-        self.master = master
         self.pc_serial = None
         self.data =  self.get_data()
         self.event = threading.Event()
@@ -54,6 +51,7 @@ class PlaybackController():
 
         while not self.event.is_set():
             if self.pc_serial is not None and self.pc_serial.is_open:
+                print('ser poll')
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
                     if line in {"1", "2", "4", "5"}:
@@ -89,16 +87,14 @@ class PlaybackController():
     def main_loop(self):
 
         while not self.data_queue.empty():
-
             try:
                 data = self.data_queue.get_nowait()
                 self.handle_button_press(data)
             except queue.Empty:
                 break
-        if not self.event.is_set():
-            self.master.after(100,lambda:self.main_loop())
         else:
             return
+                
 
     
     def start(self):

@@ -19,7 +19,7 @@ class PlaybackFrame(ctk.CTkFrame):
         self.place_forget()
         self.menu()
         self.update_status_label()
-        self.pbc = PlaybackController(self,on_status_change=self.update_status_label)
+        self.pbc = PlaybackController(on_status_change=self.update_status_label)
         
         
         
@@ -116,7 +116,7 @@ class PlaybackFrame(ctk.CTkFrame):
 
         self.pbc.connect_mcu()
         self.pbc.start()
-        self.pbc.main_loop()
+        self.start_poll()
 
 
     def disconnect(self):
@@ -127,6 +127,16 @@ class PlaybackFrame(ctk.CTkFrame):
     
     def reset_mcu(self):
         self.pbc.reset_mcu()
+
+
+
+    def start_poll(self):
+        self.pbc.main_loop()
+        if self.pbc.pc_serial:
+            self.after(100,self.start_poll)
+        else:
+            return
+
 
 
 
