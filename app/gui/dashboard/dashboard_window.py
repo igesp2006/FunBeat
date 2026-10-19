@@ -13,7 +13,7 @@ from utility.path import get_asset_path
 
 class DashboardWindowGui():
     
-    def __init__(self,parent=None):
+    def __init__(self,parent: ctk.CTk = None):
         
         if parent is None:
             self.dashtop = ctk.CTk()
