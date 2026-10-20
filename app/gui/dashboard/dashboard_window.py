@@ -244,7 +244,6 @@ class DashboardWindowGui():
         self.tray_thread.start()
 
 
-
     def show_app(self):
         self.dashtop.after(0, self.dashtop.deiconify)
         self.dashtop.after(0, self.dashtop.lift)
@@ -253,11 +252,7 @@ class DashboardWindowGui():
     def exit_app(self):
 
         self.tray.stop()
-        
-        if self.parent is not None:
-            self.dashtop.after(0, self.parent.destroy)
-        else:
-            self.dashtop.after(0, self.dashtop.destroy)
+        self.on_close()
 
     
     def minimize_to_tray(self):
@@ -265,12 +260,15 @@ class DashboardWindowGui():
 
 
 
+
+
         
     def on_close(self):
 
         self.playback_frame.disconnect()
-        self.parent.deiconify()
-        self.dashtop.destroy()
+        self.dashtop.after(0, self.dashtop.destroy)
+        if self.parent is not None:
+            self.parent.deiconify()
         
     
     def update(self):
