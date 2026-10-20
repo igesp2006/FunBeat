@@ -5,7 +5,7 @@ from utility.json import load_config, get_project_root
 
 class PlaybackFrame(ctk.CTkFrame):
 
-    def __init__(self, parent):
+    def __init__(self, parent:ctk.CTkToplevel):
 
         super().__init__(
             parent,
@@ -13,6 +13,7 @@ class PlaybackFrame(ctk.CTkFrame):
             height=480,
             fg_color="#1B1825"
         )
+        self.parent = parent
         self.accent_rgb = (185, 131, 255)
         self.bg_rgb = (27, 24, 37)
         self.place(x=30, y=140)
@@ -20,7 +21,7 @@ class PlaybackFrame(ctk.CTkFrame):
         self.menu()
         self.update_status_label()
         self.pbc = PlaybackController(on_status_change=self.update_status_label)
-        
+
         
         
     def animate(self):  
@@ -120,7 +121,6 @@ class PlaybackFrame(ctk.CTkFrame):
 
 
     def disconnect(self):
-
         self.pbc.stop()
 
 

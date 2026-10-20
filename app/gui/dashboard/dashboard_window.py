@@ -10,7 +10,7 @@ from gui.dashboard.pages.playback_page import PlaybackFrame
 from gui.dashboard.pages.configure_device_page import ConfigureDevices
 from utility.path import get_asset_path
 
-
+ 
 class DashboardWindowGui():
     
     def __init__(self,parent: ctk.CTk = None):
@@ -225,7 +225,8 @@ class DashboardWindowGui():
 
         
     def on_close(self):
-        
+
+        self.playback_frame.disconnect()
         self.parent.deiconify()
         self.dashtop.destroy()
         
