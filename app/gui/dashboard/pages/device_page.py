@@ -1,10 +1,10 @@
-from gui.gui_functions import fade_in, switch_page
+from gui.gui_functions import fade_in
 import customtkinter as ctk
 from devices.serial_manager import show_device_description
 
 class DeviceFrame(ctk.CTkFrame):
 
-    def __init__(self, parent, dashboard):
+    def __init__(self, parent:ctk.CTkToplevel, dashboard:ctk.CTkToplevel):
 
         super().__init__(
             parent,
@@ -18,6 +18,7 @@ class DeviceFrame(ctk.CTkFrame):
         self.bg_rgb = (27, 24, 37)
         self.menu()
         self.create_label()
+        
       
       
         
@@ -160,4 +161,3 @@ class DeviceFrame(ctk.CTkFrame):
                 j.configure(text=f'{i.name}   {i.description}')
         else:
             self.log_label[0].configure(text='No Device Found')
-        
