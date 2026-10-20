@@ -54,7 +54,7 @@ class PlaybackController():
                 print('ser poll')
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
-                    if line in {"1", "2", "4", "5"}:
+                    if line in {"1", "2", "3", "4"}:
                         self.data_queue.put(line)
                 except serial.SerialException:
                     self.pc_serial = None
@@ -76,10 +76,10 @@ class PlaybackController():
             case '2':
                 self.press_media_key(VK_VOLUME_MUTE)
 
-            case '4':
+            case '3':
                 self.press_media_key(VK_MEDIA_PREV_TRACK)
 
-            case '5':
+            case '4':
                 self.press_media_key(VK_MEDIA_NEXT_TRACK)
 
 
