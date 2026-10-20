@@ -1,5 +1,9 @@
 import customtkinter as ctk
 from gui.gui_functions import center_window, slide, fade_in
+from utility.path import get_asset_path
+import pystray
+from PIL import Image
+import threading
 from gui.settings_window import SettingsWindowGui
 from gui.dashboard.pages.media_deck_page import MediaDeckFrame
 from gui.dashboard.pages.device_page import DeviceFrame
@@ -8,12 +12,11 @@ from gui.dashboard.pages.rgb_ic_page import RgbIcFrame
 from gui.dashboard.pages.server_page import ServerFrame
 from gui.dashboard.pages.playback_page import PlaybackFrame
 from gui.dashboard.pages.configure_device_page import ConfigureDevices
-from utility.path import get_asset_path
 
  
 class DashboardWindowGui():
     
-    def __init__(self,parent: ctk.CTk = None):
+    def __init__(self,parent:ctk.CTk = None):
         
         if parent is None:
             self.dashtop = ctk.CTk()
@@ -21,8 +24,8 @@ class DashboardWindowGui():
         else:
             self.dashtop = ctk.CTkToplevel(parent)
             self.dashtop.protocol('WM_DELETE_WINDOW',self.on_close)
-            self.parent = parent
             
+        self.parent = parent
         self.dashtop.geometry(center_window(self.dashtop, 700, 720))
         self.dashtop.resizable(1, 1)
         self.dashtop.title('FunBeat: Dashboard')
@@ -30,7 +33,7 @@ class DashboardWindowGui():
 
         icon_path = str(get_asset_path('ico'))
 
-        if parent is None:
+        if self.parent is None:
             self.dashtop.iconbitmap(icon_path)
         else:
             self.dashtop.after(300, lambda: self.dashtop.iconbitmap(icon_path))
@@ -38,6 +41,7 @@ class DashboardWindowGui():
         self.create_widget()
         self.create_home_frame()
         self.create_buttons()
+        self.create_tray_event()
         
         self.media_frame = MediaDeckFrame(self.dashtop)
         self.device_frame = DeviceFrame(self.dashtop,self)
@@ -92,7 +96,7 @@ class DashboardWindowGui():
                                         border_color='#B983FF',
                                         border_width=2,
                                         hover=False,
-                                        command=None)
+                                        command=self.minimize_to_tray)
         
         
         
@@ -221,7 +225,45 @@ class DashboardWindowGui():
             self.dashtop.after(20,page.animate)
         except AttributeError:
             self.animate_widget()
+
+    
+
+
+    def create_tray_event(self):
+
+        tray_image = Image.open(get_asset_path("ico"))
+
+        tray_menu = pystray.Menu(
+                                pystray.MenuItem("Open",self.show_app,default=True),
+                                pystray.MenuItem("Exit",self.exit_app)
+        )
+
+        self.tray = pystray.Icon("FunBeat",tray_image,"Funbeat",tray_menu)
+
+        self.tray_thread = threading.Thread(target=self.tray.run,daemon=True)
+        self.tray_thread.start()
+
+
+
+    def show_app(self):
+        self.dashtop.after(0, self.dashtop.deiconify)
+        self.dashtop.after(0, self.dashtop.lift)
+
+
+    def exit_app(self):
+
+        self.tray.stop()
         
+        if self.parent is not None:
+            self.dashtop.after(0, self.parent.destroy)
+        else:
+            self.dashtop.after(0, self.dashtop.destroy)
+
+    
+    def minimize_to_tray(self):
+        self.dashtop.withdraw()
+
+
 
         
     def on_close(self):
