@@ -51,7 +51,6 @@ class PlaybackController():
 
         while not self.event.is_set():
             if self.pc_serial is not None and self.pc_serial.is_open:
-                print('ser poll')
                 try:
                     line = self.pc_serial.readline().decode(errors="ignore").strip()
                     if line in {"1", "2", "3", "4"}:
